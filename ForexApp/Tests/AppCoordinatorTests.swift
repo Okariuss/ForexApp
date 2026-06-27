@@ -1,7 +1,6 @@
+@testable import ForexApp
 import Testing
 import UIKit
-
-@testable import ForexApp
 
 @MainActor
 struct AppCoordinatorTests {
@@ -22,5 +21,4 @@ struct AppCoordinatorTests {
         #expect(navigationController != nil)
         #expect(navigationController?.topViewController?.title == "Forex")
     }
-
 }

@@ -1,0 +1,11 @@
+--swiftversion 6.0
+--indent 4
+--linebreaks lf
+--maxwidth 100
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--trimwhitespace always
+--semicolons never
+--self remove
+--exclude Derived,.build,Tuist/.build
