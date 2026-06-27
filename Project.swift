@@ -1,20 +1,27 @@
 import ProjectDescription
 
+let sharedSettings: Settings = .settings(
+    configurations: [
+        .debug(
+            name: "Debug",
+            xcconfig: "Configurations/Debug.xcconfig"
+        ),
+        .release(
+            name: "Release",
+            xcconfig: "Configurations/Release.xcconfig"
+        ),
+    ],
+    defaultSettings: .recommended(
+        excluding: [
+            "SWIFT_VERSION",
+        ]
+    )
+)
+
 let project = Project(
     name: "ForexApp",
     organizationName: "Okarius",
-    settings: .settings(
-        configurations: [
-            .debug(
-                name: "Debug",
-                xcconfig: "Configurations/Debug.xcconfig"
-            ),
-            .release(
-                name: "Release",
-                xcconfig: "Configurations/Release.xcconfig"
-            ),
-        ],
-    ),
+    settings: sharedSettings,
     targets: [
         .target(
             name: "ForexApp",
@@ -47,7 +54,8 @@ let project = Project(
                 "ForexApp/Sources",
                 "ForexApp/Resources",
             ],
-            dependencies: []
+            dependencies: [],
+            settings: sharedSettings
         ),
         .target(
             name: "ForexAppTests",
@@ -57,11 +65,12 @@ let project = Project(
             deploymentTargets: .iOS("26.0"),
             infoPlist: .default,
             buildableFolders: [
-                "ForexApp/Tests"
+                "ForexApp/Tests",
             ],
             dependencies: [
-                .target(name: "ForexApp")
-            ]
+                .target(name: "ForexApp"),
+            ],
+            settings: sharedSettings
         ),
     ]
 )
