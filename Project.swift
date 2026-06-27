@@ -24,6 +24,36 @@ let project = Project(
     settings: sharedSettings,
     targets: [
         .target(
+            name: "RatesDomain",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "com.okarius.forexapp.ratesdomain",
+            deploymentTargets: .iOS("26.0"),
+            infoPlist: .default,
+            buildableFolders: [
+                "Modules/RatesDomain/Sources",
+            ],
+            dependencies: [],
+            settings: sharedSettings
+        ),
+        .target(
+            name: "RatesDomainTests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "com.okarius.forexapp.ratesdomain.tests",
+            deploymentTargets: .iOS("26.0"),
+            infoPlist: .default,
+            buildableFolders: [
+                "Modules/RatesDomain/Tests",
+            ],
+            dependencies: [
+                .target(
+                    name: "RatesDomain"
+                ),
+            ],
+            settings: sharedSettings
+        ),
+        .target(
             name: "ForexApp",
             destinations: .iOS,
             product: .app,
@@ -54,7 +84,11 @@ let project = Project(
                 "ForexApp/Sources",
                 "ForexApp/Resources",
             ],
-            dependencies: [],
+            dependencies: [
+                .target(
+                    name: "RatesDomain"
+                ),
+            ],
             settings: sharedSettings
         ),
         .target(
