@@ -1,6 +1,7 @@
 included:
   - ForexApp/Sources
   - ForexApp/Tests
+  - Modules
 excluded:
   - Derived
   - .build
