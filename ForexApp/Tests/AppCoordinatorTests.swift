@@ -11,9 +11,23 @@ struct AppCoordinatorTests {
                 .first
         )
         let window = UIWindow(windowScene: windowScene)
-        let subject = AppCoordinator(window: window)
+        let configuration = try AppConfiguration(
+            values: [
+                "ExchangeRateAPIBaseURL":
+                    "https://open.er-api.com"
+            ]
+        )
 
-        subject.start()
+        let dependencies = AppDependencies(
+            configuration: configuration
+        )
+
+        let sut = AppCoordinator(
+            window: window,
+            dependencies: dependencies
+        )
+
+        sut.start()
 
         let navigationController =
             window.rootViewController as? UINavigationController

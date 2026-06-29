@@ -22,8 +22,26 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         let window = UIWindow(windowScene: windowScene)
-        self.window = window
-        appCoordinator = AppCoordinator(window: window)
-        appCoordinator?.start()
+
+        do {
+            let configuration = try AppConfiguration()
+
+            let dependencies = AppDependencies(
+                configuration: configuration
+            )
+
+            self.window = window
+
+            appCoordinator = AppCoordinator(
+                window: window,
+                dependencies: dependencies
+            )
+            appCoordinator?.start()
+
+        } catch {
+            preconditionFailure(
+                "App Configuration is invalid: \(error)"
+            )
+        }
     }
 }

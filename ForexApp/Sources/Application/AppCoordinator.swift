@@ -11,10 +11,15 @@ import UIKit
 @MainActor
 final class AppCoordinator: Coordinator {
     private let window: UIWindow
+    private let dependencies: AppDependencies
     private let navigationController: UINavigationController
 
-    init(window: UIWindow) {
+    init(
+        window: UIWindow,
+        dependencies: AppDependencies
+    ) {
         self.window = window
+        self.dependencies = dependencies
         navigationController = UINavigationController()
     }
 
