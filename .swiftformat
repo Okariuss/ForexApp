@@ -9,3 +9,4 @@
 --semicolons never
 --self remove
 --exclude Derived,.build,Tuist/.build
+--commas inline

@@ -9,11 +9,11 @@ let sharedSettings: Settings = .settings(
         .release(
             name: "Release",
             xcconfig: "Configurations/Release.xcconfig"
-        ),
+        )
     ],
     defaultSettings: .recommended(
         excluding: [
-            "SWIFT_VERSION",
+            "SWIFT_VERSION"
         ]
     )
 )
@@ -24,6 +24,36 @@ let project = Project(
     settings: sharedSettings,
     targets: [
         .target(
+            name: "NetworkingCore",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "com.okarius.forexapp.networkingcore",
+            deploymentTargets: .iOS("26.0"),
+            infoPlist: .default,
+            buildableFolders: [
+                "Modules/NetworkingCore/Sources"
+            ],
+            dependencies: [],
+            settings: sharedSettings
+        ),
+        .target(
+            name: "NetworkingCoreTests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "com.okarius.forexapp.networkingcore.tests",
+            deploymentTargets: .iOS("26.0"),
+            infoPlist: .default,
+            buildableFolders: [
+                "Modules/NetworkingCore/Tests"
+            ],
+            dependencies: [
+                .target(
+                    name: "NetworkingCore"
+                )
+            ],
+            settings: sharedSettings
+        ),
+        .target(
             name: "RatesDomain",
             destinations: .iOS,
             product: .framework,
@@ -31,7 +61,7 @@ let project = Project(
             deploymentTargets: .iOS("26.0"),
             infoPlist: .default,
             buildableFolders: [
-                "Modules/RatesDomain/Sources",
+                "Modules/RatesDomain/Sources"
             ],
             dependencies: [],
             settings: sharedSettings
@@ -44,12 +74,12 @@ let project = Project(
             deploymentTargets: .iOS("26.0"),
             infoPlist: .default,
             buildableFolders: [
-                "Modules/RatesDomain/Tests",
+                "Modules/RatesDomain/Tests"
             ],
             dependencies: [
                 .target(
                     name: "RatesDomain"
-                ),
+                )
             ],
             settings: sharedSettings
         ),
@@ -69,25 +99,25 @@ let project = Project(
                             "UIWindowSceneSessionRoleApplication": [
                                 [
                                     "UISceneConfigurationName": "Default Configuration",
-                                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate",
-                                ],
-                            ],
-                        ],
+                                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
+                                ]
+                            ]
+                        ]
                     ],
                     "UILaunchScreen": [
                         "UIColorName": "",
-                        "UIImageName": "",
-                    ],
+                        "UIImageName": ""
+                    ]
                 ]
             ),
             buildableFolders: [
                 "ForexApp/Sources",
-                "ForexApp/Resources",
+                "ForexApp/Resources"
             ],
             dependencies: [
                 .target(
                     name: "RatesDomain"
-                ),
+                )
             ],
             settings: sharedSettings
         ),
@@ -99,12 +129,12 @@ let project = Project(
             deploymentTargets: .iOS("26.0"),
             infoPlist: .default,
             buildableFolders: [
-                "ForexApp/Tests",
+                "ForexApp/Tests"
             ],
             dependencies: [
-                .target(name: "ForexApp"),
+                .target(name: "ForexApp")
             ],
             settings: sharedSettings
-        ),
+        )
     ]
 )

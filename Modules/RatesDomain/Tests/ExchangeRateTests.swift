@@ -33,7 +33,7 @@ struct ExchangeRateTests {
     @Test(
         arguments: [
             Decimal.zero,
-            Decimal(-1),
+            Decimal(-1)
         ]
     )
     func nonPositiveValueThrowsError(_ value: Decimal) throws {
