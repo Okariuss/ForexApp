@@ -24,6 +24,43 @@ let project = Project(
     settings: sharedSettings,
     targets: [
         .target(
+            name: "RatesData",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "com.okarius.forexapp.ratesdata",
+            deploymentTargets: .iOS("26.0"),
+            infoPlist: .default,
+            buildableFolders: [
+                "Modules/RatesData/Sources"
+            ],
+            dependencies: [
+                .target(
+                    name: "NetworkingCore"
+                ),
+                .target(
+                    name: "RatesDomain"
+                )
+            ],
+            settings: sharedSettings
+        ),
+        .target(
+            name: "RatesDataTests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "com.okarius.forexapp.ratesdata.tests",
+            deploymentTargets: .iOS("26.0"),
+            infoPlist: .default,
+            buildableFolders: [
+                "Modules/RatesData/Tests"
+            ],
+            dependencies: [
+                .target(
+                    name: "RatesData"
+                )
+            ],
+            settings: sharedSettings
+        ),
+        .target(
             name: "NetworkingCore",
             destinations: .iOS,
             product: .framework,
@@ -93,6 +130,7 @@ let project = Project(
                 with: [
                     "CFBundleShortVersionString": "$(MARKETING_VERSION)",
                     "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
+                    "ExchangeRateAPIBaseURL": "$(EXCHANGE_RATE_API_BASE_URL)",
                     "UIApplicationSceneManifest": [
                         "UIApplicationSupportsMultipleScenes": false,
                         "UISceneConfigurations": [
@@ -117,6 +155,12 @@ let project = Project(
             dependencies: [
                 .target(
                     name: "RatesDomain"
+                ),
+                .target(
+                    name: "NetworkingCore"
+                ),
+                .target(
+                    name: "RatesData"
                 )
             ],
             settings: sharedSettings
