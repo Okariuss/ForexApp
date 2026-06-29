@@ -21,7 +21,7 @@ struct CurrencyCodeTests {
             "US",
             "USDD",
             "U1D",
-            "€UR",
+            "€UR"
         ]
     )
     func invalidValueThrowsError(_ value: String) {

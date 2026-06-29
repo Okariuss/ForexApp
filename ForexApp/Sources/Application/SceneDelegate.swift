@@ -22,12 +22,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         let window = UIWindow(windowScene: windowScene)
-        let appCoordinator = AppCoordinator(window: window)
-
         self.window = window
-        self.appCoordinator = appCoordinator
-
-        appCoordinator.start()
-        window.makeKeyAndVisible()
+        appCoordinator = AppCoordinator(window: window)
+        appCoordinator?.start()
     }
 }
