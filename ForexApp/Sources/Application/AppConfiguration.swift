@@ -7,19 +7,24 @@
 //
 
 import Foundation
+import RatesDomain
 
 enum AppConfigurationError: Error, Equatable {
     case missingValue(String)
     case invalidURL(String)
+    case invalidCurrencyCode(String)
 }
 
 struct AppConfiguration {
     private enum Key {
         static let exchangeRateAPIBaseURL =
             "ExchangeRateAPIBaseURL"
+        static let defaultBaseCurrencyCode =
+            "DefaultBaseCurrencyCode"
     }
 
     let exchangeRateAPIBaseURL: URL
+    let defaultBaseCurrency: CurrencyCode
 
     init(bundle: Bundle = .main) throws {
         try self.init(
@@ -44,6 +49,22 @@ struct AppConfiguration {
             throw AppConfigurationError.invalidURL(value)
         }
 
+        guard let currencyCode = values[
+            Key.defaultBaseCurrencyCode
+        ] as? String else {
+            throw AppConfigurationError.missingValue(
+                Key.defaultBaseCurrencyCode
+            )
+        }
+
+        guard let defaultBaseCurrency =
+            try? CurrencyCode(currencyCode)
+        else {
+            throw AppConfigurationError
+                .invalidCurrencyCode(currencyCode)
+        }
+
         exchangeRateAPIBaseURL = url
+        self.defaultBaseCurrency = defaultBaseCurrency
     }
 }

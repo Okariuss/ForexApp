@@ -14,13 +14,18 @@ struct AppConfigurationTests {
         let sut = try AppConfiguration(
             values: [
                 "ExchangeRateAPIBaseURL":
-                    "https://open.er-api.com"
+                    "https://open.er-api.com",
+                "DefaultBaseCurrencyCode": "USD"
             ]
         )
 
         #expect(
             sut.exchangeRateAPIBaseURL.absoluteString ==
                 "https://open.er-api.com"
+        )
+
+        #expect(
+            sut.defaultBaseCurrency.value == "USD"
         )
     }
 
@@ -42,7 +47,27 @@ struct AppConfigurationTests {
         ) {
             try AppConfiguration(
                 values: [
-                    "ExchangeRateAPIBaseURL": value
+                    "ExchangeRateAPIBaseURL": value,
+                    "DefaultBaseCurrencyCode": "USD"
+                ]
+            )
+        }
+    }
+
+    @Test func invalidCurrencyCodeThrowsError() {
+        let currencyCode = "INVALID"
+
+        #expect(
+            throws:
+            AppConfigurationError
+                .invalidCurrencyCode(currencyCode)
+        ) {
+            try AppConfiguration(
+                values: [
+                    "ExchangeRateAPIBaseURL":
+                        "https://open.er-api.com",
+                    "DefaultBaseCurrencyCode":
+                        currencyCode
                 ]
             )
         }
