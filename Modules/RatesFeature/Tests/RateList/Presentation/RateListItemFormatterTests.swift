@@ -6,6 +6,7 @@
 //  Copyright © 2026 Okarius. All rights reserved.
 //
 
+import AppMacros
 import Foundation
 import RatesDomain
 @testable import RatesFeature
@@ -18,9 +19,7 @@ struct RateListItemFormatterTests {
             locale: Locale(identifier: "tr_TR"),
             timeZone: #require(TimeZone(secondsFromGMT: 0))
         )
-        let value = try #require(
-            Decimal(string: "32.25")
-        )
+        let value = #Decimal("32.25")
 
         let rate = try ExchangeRate(
             baseCurrency: CurrencyCode("USD"),

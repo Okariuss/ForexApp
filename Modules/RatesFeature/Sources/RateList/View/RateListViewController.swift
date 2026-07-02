@@ -6,6 +6,7 @@
 //  Copyright © 2026 Okarius. All rights reserved.
 //
 
+import AppMacros
 import RatesDomain
 import UIKit
 
@@ -310,11 +311,7 @@ private extension RateListViewController {
     }
 
     @objc private func attributionTapped() {
-        guard let url = URL(
-            string: "https://www.exchangerate-api.com"
-        ) else {
-            return
-        }
+        let url = #URL("https://www.exchangerate-api.com")
 
         coordinator?.handle(
             route: .openProvider(url)
