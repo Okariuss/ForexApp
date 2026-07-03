@@ -6,6 +6,7 @@
 //  Copyright © 2026 Okarius. All rights reserved.
 //
 
+import Foundation
 import NetworkingCore
 import RatesData
 import RatesDomain
@@ -21,11 +22,26 @@ struct AppDependencies {
             baseURL: configuration.exchangeRateAPIBaseURL
         )
 
-        ratesRepository = ExchangeRateAPIRatesRepository(
-            httpClient: httpClient
+        let remoteRepository =
+            ExchangeRateAPIRatesRepository(
+                httpClient: httpClient
+            )
+
+        let cacheStore = FileRatesCacheStore(
+            directoryURL: URL.cachesDirectory
+                .appendingPathComponent(
+                    "ExchangeRates",
+                    isDirectory: true
+                )
         )
 
-        baseCurrencyPreferenceStore = BaseCurrencyPreferenceStore()
+        ratesRepository = CachedRatesRepository(
+            remoteRepository: remoteRepository,
+            cacheStore: cacheStore
+        )
+
+        baseCurrencyPreferenceStore =
+            BaseCurrencyPreferenceStore()
 
         defaultBaseCurrency =
             configuration.defaultBaseCurrency
