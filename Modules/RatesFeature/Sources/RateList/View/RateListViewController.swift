@@ -87,6 +87,17 @@ final class RateListViewController: UIViewController {
         return button
     }()
 
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = RateListColor.action
+        refreshControl.addTarget(
+            self,
+            action: #selector(refreshRates),
+            for: .valueChanged
+        )
+        return refreshControl
+    }()
+
     init(viewModel: RateListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -124,8 +135,14 @@ private extension RateListViewController {
         view.addSubview(collectionView)
         view.addSubview(attributionButton)
 
+        setupRefreshToCollectionView()
         setupContentLayout()
         setupAttributionLayout()
+    }
+
+    func setupRefreshToCollectionView() {
+        collectionView.refreshControl = refreshControl
+        collectionView.alwaysBounceVertical = false
     }
 
     func setupContentLayout() {
@@ -228,7 +245,7 @@ private extension RateListViewController {
         }
     }
 
-    private func render(_ state: RateListViewState) {
+    func render(_ state: RateListViewState) {
         switch state {
         case .idle:
             headerView.isHidden = true
@@ -268,7 +285,7 @@ private extension RateListViewController {
         }
     }
 
-    private func apply(items: [RateListItem]) {
+    func apply(items: [RateListItem]) {
         var updatedItemsByID: [
             RateListItem.ItemID: RateListItem
         ] = [:]
@@ -310,11 +327,27 @@ private extension RateListViewController {
         )
     }
 
-    @objc private func attributionTapped() {
+    @objc func attributionTapped() {
         let url = #URL("https://www.exchangerate-api.com")
 
         coordinator?.handle(
             route: .openProvider(url)
         )
+    }
+
+    @objc func refreshRates() {
+        loadTask?.cancel()
+
+        loadTask = Task { @MainActor [weak self] in
+            guard let self else {
+                return
+            }
+
+            defer {
+                refreshControl.endRefreshing()
+            }
+
+            await viewModel.refresh()
+        }
     }
 }

@@ -57,28 +57,11 @@ final class RateListViewModel {
     }
 
     func load() async {
-        state = .loading
-        do {
-            let rates = try await repository.fetchRates(
-                baseCurrency: baseCurrency
-            )
-            try Task.checkCancellation()
+        await fetchRates(displaysLoading: true)
+    }
 
-            guard !rates.isEmpty else {
-                state = .empty
-                return
-            }
-
-            self.rates = rates
-            renderContent()
-        } catch is CancellationError {
-            return
-        } catch {
-            guard !Task.isCancelled else {
-                return
-            }
-            state = .error
-        }
+    func refresh() async {
+        await fetchRates(displaysLoading: false)
     }
 
     func updateAmount(_ text: String) {
@@ -143,5 +126,38 @@ private extension RateListViewModel {
                 items: items
             )
         )
+    }
+
+    private func fetchRates(
+        displaysLoading: Bool
+    ) async {
+        if displaysLoading {
+            state = .loading
+        }
+
+        do {
+            let rates = try await repository.fetchRates(
+                baseCurrency: baseCurrency
+            )
+            try Task.checkCancellation()
+
+            guard !rates.isEmpty else {
+                state = .empty
+                return
+            }
+
+            self.rates = rates
+            renderContent()
+        } catch is CancellationError {
+            return
+        } catch {
+            guard !Task.isCancelled else {
+                return
+            }
+
+            if displaysLoading {
+                state = .error
+            }
+        }
     }
 }
