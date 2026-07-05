@@ -119,11 +119,31 @@ final class RateListViewController: UIViewController {
     }
 
     func selectBaseCurrency(_ currency: CurrencyCode) {
+        headerView.updateBaseCurrency(currency.value)
+
         loadTask?.cancel()
 
         loadTask = Task { [weak self] in
             await self?.viewModel.selectBaseCurrency(currency)
         }
+    }
+}
+
+extension RateListViewController {
+    func currencyCodeFrame(
+        in containerView: UIView
+    ) -> CGRect {
+        headerView.currencyCodeFrame(
+            in: containerView
+        )
+    }
+
+    func currencyCodeSnapshot() -> UIView? {
+        headerView.currencyCodeSnapshot()
+    }
+
+    func setCurrencyCodeAlpha(_ alpha: CGFloat) {
+        headerView.setCurrencyCodeAlpha(alpha)
     }
 }
 

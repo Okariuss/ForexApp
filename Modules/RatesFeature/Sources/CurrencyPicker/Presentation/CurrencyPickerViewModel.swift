@@ -25,6 +25,10 @@ final class CurrencyPickerViewModel {
 
     var onItemsChange: (([CurrencyPickerItem]) -> Void)?
 
+    var selectedCurrencyID: String {
+        selectedCurrency.value
+    }
+
     init(
         currencies: [CurrencyCode],
         selectedCurrency: CurrencyCode,
