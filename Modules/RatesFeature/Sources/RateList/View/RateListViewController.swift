@@ -65,7 +65,7 @@ final class RateListViewController: UIViewController {
     private lazy var attributionButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(
-            "Rates By Exchange Rate API",
+            RatesFeatureStrings.attributionTitle,
             for: .normal
         )
         button.setTitleColor(
@@ -101,7 +101,7 @@ final class RateListViewController: UIViewController {
     init(viewModel: RateListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        title = "Rates"
+        title = RatesFeatureStrings.ratesTitle
     }
 
     required init?(coder _: NSCoder) {

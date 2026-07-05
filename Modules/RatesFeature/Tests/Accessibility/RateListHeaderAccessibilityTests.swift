@@ -12,7 +12,59 @@ import UIKit
 
 @MainActor
 struct RateListHeaderAccessibilityTests {
-    @Test func headerExposesControlsWithoutDuplicateLabels() throws {
+    @Test func headerExposesLocalizedControlMetadata() throws {
+        let sut = makeSubject()
+
+        let button = try #require(
+            firstSubview(of: UIButton.self, in: sut)
+        )
+        let textField = try #require(
+            firstSubview(of: UITextField.self, in: sut)
+        )
+
+        #expect(
+            button.accessibilityLabel ==
+                RatesFeatureStrings.baseCurrencyAccessibilityLabel
+        )
+        #expect(button.accessibilityValue == "USD")
+        #expect(
+            button.accessibilityHint ==
+                RatesFeatureStrings.baseCurrencyAccessibilityHint
+        )
+        #expect(
+            textField.accessibilityLabel ==
+                RatesFeatureStrings.amountAccessibilityLabel
+        )
+        #expect(
+            textField.accessibilityHint ==
+                RatesFeatureStrings.amountAccessibilityHint
+        )
+    }
+
+    @Test func visualLabelsAreNotAccessibilityElements() {
+        let sut = makeSubject()
+        let labels = subviews(of: UILabel.self, in: sut)
+
+        #expect(
+            labels
+                .first {
+                    $0.text == RatesFeatureStrings.baseLabel
+                }?
+                .isAccessibilityElement == false
+        )
+        #expect(
+            labels
+                .first {
+                    $0.text == RatesFeatureStrings.amountLabel
+                }?
+                .isAccessibilityElement == false
+        )
+    }
+}
+
+@MainActor
+private extension RateListHeaderAccessibilityTests {
+    func makeSubject() -> RateListHeaderView {
         let sut = RateListHeaderView()
 
         sut.configure(
@@ -21,38 +73,9 @@ struct RateListHeaderAccessibilityTests {
             updatedAtText: "12:00"
         )
 
-        let button = try #require(
-            firstSubview(of: UIButton.self, in: sut)
-        )
-        let textField = try #require(
-            firstSubview(of: UITextField.self, in: sut)
-        )
-        let labels = subviews(of: UILabel.self, in: sut)
-
-        #expect(button.accessibilityLabel == "Base currency")
-        #expect(button.accessibilityValue == "USD")
-        #expect(
-            button.accessibilityHint == "Opens the currency selection list."
-        )
-        #expect(textField.accessibilityLabel == "Amount")
-        #expect(
-            textField.accessibilityHint == "Enter the amount to convert."
-        )
-        #expect(
-            labels
-                .first { $0.text == "Base:" }?
-                .isAccessibilityElement == false
-        )
-        #expect(
-            labels
-                .first { $0.text == "Amount" }?
-                .isAccessibilityElement == false
-        )
+        return sut
     }
-}
 
-@MainActor
-private extension RateListHeaderAccessibilityTests {
     func firstSubview<T: UIView>(
         of type: T.Type,
         in view: UIView

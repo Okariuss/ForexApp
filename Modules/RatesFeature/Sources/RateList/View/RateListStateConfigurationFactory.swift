@@ -13,7 +13,7 @@ enum RateListStateConfigurationFactory {
     static func makeLoading() -> UIContentUnavailableConfiguration {
         var configuration = UIContentUnavailableConfiguration.loading()
 
-        configuration.text = "Loading Rates"
+        configuration.text = RatesFeatureStrings.loadingTitle
         configuration.textProperties.font = RateListTypography.stateTitle
         configuration.textProperties.color = RateListColor.stateTitle
 
@@ -24,8 +24,8 @@ enum RateListStateConfigurationFactory {
         var configuration = UIContentUnavailableConfiguration.empty()
 
         configuration.image = UIImage(systemName: "list.bullet")
-        configuration.text = "No Rates"
-        configuration.secondaryText = "No exchange rates are available"
+        configuration.text = RatesFeatureStrings.emptyTitle
+        configuration.secondaryText = RatesFeatureStrings.emptyMessage
 
         applyStyle(to: &configuration)
 
@@ -43,11 +43,11 @@ enum RateListStateConfigurationFactory {
         )
         configuration.imageProperties.tintColor = RateListColor.error
 
-        configuration.text = "Could Not Load Rates"
-        configuration.secondaryText = "Check your connection and try again."
+        configuration.text = RatesFeatureStrings.errorTitle
+        configuration.secondaryText = RatesFeatureStrings.errorMessage
 
         configuration.button = .filled()
-        configuration.button.title = "Try Again"
+        configuration.button.title = RatesFeatureStrings.retryTitle
         configuration.buttonProperties.primaryAction = UIAction { _ in
             retryAction()
         }

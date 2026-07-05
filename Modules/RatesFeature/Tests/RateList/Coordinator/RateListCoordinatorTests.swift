@@ -34,7 +34,7 @@ struct RateListCoordinatorTests {
         #expect(
             viewController.coordinator === coordinator
         )
-        #expect(viewController.title == "Rates")
+        #expect(viewController.title == RatesFeatureStrings.ratesTitle)
     }
 
     @Test func startSetsRateListAsRoot() throws {
@@ -56,7 +56,7 @@ struct RateListCoordinatorTests {
         #expect(
             navigationController
                 .topViewController?
-                .title == "Rates"
+                .title == RatesFeatureStrings.ratesTitle
         )
     }
 

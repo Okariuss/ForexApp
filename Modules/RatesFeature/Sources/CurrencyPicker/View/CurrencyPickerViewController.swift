@@ -44,7 +44,7 @@ final class CurrencyPickerViewController: UIViewController {
         self.viewModel = viewModel
         transitionCurrencyID = viewModel.selectedCurrencyID
         super.init(nibName: nil, bundle: nil)
-        title = "Select Currency"
+        title = RatesFeatureStrings.currencyPickerTitle
     }
 
     required init?(coder _: NSCoder) {
@@ -171,7 +171,7 @@ private extension CurrencyPickerViewController {
     func setupSearchController() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search Currency"
+        searchController.searchBar.placeholder = RatesFeatureStrings.currencyPickerSearchPlaceholder
 
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
