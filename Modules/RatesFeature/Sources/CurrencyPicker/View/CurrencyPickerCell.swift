@@ -15,10 +15,9 @@ final class CurrencyPickerCell: UITableViewCell {
 
     private let currencyCodeLabel: UILabel = {
         let label = UILabel()
-        label.font =
-            CurrencyPickerTypography.currencyCode
-        label.textColor =
-            CurrencyPickerColor.currencyCode
+        label.font = CurrencyPickerTypography.currencyCode
+        label.textColor = CurrencyPickerColor.currencyCode
+        label.numberOfLines = 0
         label.adjustsFontForContentSizeCategory = true
         label.setContentHuggingPriority(
             .required,
@@ -33,10 +32,9 @@ final class CurrencyPickerCell: UITableViewCell {
 
     private let currencyNameLabel: UILabel = {
         let label = UILabel()
-        label.font =
-            CurrencyPickerTypography.currencyName
-        label.textColor =
-            CurrencyPickerColor.currencyName
+        label.font = CurrencyPickerTypography.currencyName
+        label.textColor = CurrencyPickerColor.currencyName
+        label.numberOfLines = 0
         label.textAlignment = .right
         label.adjustsFontForContentSizeCategory = true
         return label
@@ -81,6 +79,9 @@ final class CurrencyPickerCell: UITableViewCell {
         currencyCodeLabel.alpha = 1
         currencyNameLabel.text = nil
         accessoryType = .none
+        accessibilityLabel = nil
+        accessibilityHint = nil
+        accessibilityTraits = .button
     }
 
     func configure(with item: CurrencyPickerItem) {
@@ -90,6 +91,12 @@ final class CurrencyPickerCell: UITableViewCell {
             item.isSelected ? .checkmark : .none
         accessibilityLabel =
             "\(item.codeText), \(item.nameText)"
+        accessibilityHint =
+            "Sets \(item.codeText) as the base currency."
+        accessibilityTraits =
+            item.isSelected
+                ? [.button, .selected]
+                : .button
     }
 
     func currencyCodeFrame(
@@ -139,6 +146,20 @@ private extension CurrencyPickerCell {
                 trailing: CurrencyPickerMetrics.cellHorizontalInset
             )
 
+        isAccessibilityElement = true
+        accessibilityTraits = .button
+        contentView.isAccessibilityElement = false
+        currencyCodeLabel.isAccessibilityElement = false
+        currencyNameLabel.isAccessibilityElement = false
+
+        updateLayoutForContentSizeCategory()
+
+        registerForTraitChanges(
+            [UITraitPreferredContentSizeCategory.self]
+        ) { (cell: CurrencyPickerCell, _) in
+            cell.updateLayoutForContentSizeCategory()
+        }
+
         contentView.addSubview(stackView)
 
         NSLayoutConstraint.activate([
@@ -159,5 +180,18 @@ private extension CurrencyPickerCell {
                 contentView.layoutMarginsGuide.bottomAnchor
             )
         ])
+    }
+
+    func updateLayoutForContentSizeCategory() {
+        let usesVerticalLayout =
+            traitCollection.preferredContentSizeCategory
+                .isAccessibilityCategory
+
+        stackView.axis =
+            usesVerticalLayout ? .vertical : .horizontal
+        stackView.alignment =
+            usesVerticalLayout ? .leading : .firstBaseline
+        currencyNameLabel.textAlignment =
+            usesVerticalLayout ? .left : .right
     }
 }

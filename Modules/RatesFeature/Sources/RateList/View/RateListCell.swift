@@ -25,6 +25,7 @@ final class RateListCell: UICollectionViewCell {
         let label = UILabel()
         label.font = RateListTypography.currencyCode
         label.textColor = RateListColor.currencyCode
+        label.numberOfLines = 0
         label.adjustsFontForContentSizeCategory = true
         label.setContentHuggingPriority(
             .required,
@@ -37,6 +38,7 @@ final class RateListCell: UICollectionViewCell {
         let label = UILabel()
         label.font = RateListTypography.rateValue
         label.textColor = RateListColor.rateValue
+        label.numberOfLines = 0
         label.textAlignment = .right
         label.adjustsFontForContentSizeCategory = true
         return label
@@ -58,11 +60,15 @@ final class RateListCell: UICollectionViewCell {
         rateValueLabel.layer.removeAllAnimations()
         currencyCodeLabel.text = nil
         rateValueLabel.text = nil
+        accessibilityLabel = nil
+        accessibilityValue = nil
     }
 
     func configure(with item: RateListItem) {
         currencyCodeLabel.text = item.currencyCodeText
         updateRateValue(item.rateValueText)
+        accessibilityLabel = item.currencyCodeText
+        accessibilityValue = item.rateValueText
     }
 }
 
@@ -78,12 +84,22 @@ private extension RateListCell {
                 trailing: RateListMetrics.cellHorizontalInset
             )
 
-        rateStackView.addArrangedSubview(
-            currencyCodeLabel
-        )
-        rateStackView.addArrangedSubview(
-            rateValueLabel
-        )
+        isAccessibilityElement = true
+        accessibilityTraits = .staticText
+        contentView.isAccessibilityElement = false
+        currencyCodeLabel.isAccessibilityElement = false
+        rateValueLabel.isAccessibilityElement = false
+
+        updateLayoutForContentSizeCategory()
+
+        registerForTraitChanges(
+            [UITraitPreferredContentSizeCategory.self]
+        ) { (cell: RateListCell, _) in
+            cell.updateLayoutForContentSizeCategory()
+        }
+
+        rateStackView.addArrangedSubview(currencyCodeLabel)
+        rateStackView.addArrangedSubview(rateValueLabel)
         contentView.addSubview(rateStackView)
 
         NSLayoutConstraint.activate([
@@ -100,6 +116,19 @@ private extension RateListCell {
                 equalTo: contentView.layoutMarginsGuide.bottomAnchor
             )
         ])
+    }
+
+    func updateLayoutForContentSizeCategory() {
+        let usesVerticalLayout =
+            traitCollection.preferredContentSizeCategory
+                .isAccessibilityCategory
+
+        rateStackView.axis =
+            usesVerticalLayout ? .vertical : .horizontal
+        rateStackView.alignment =
+            usesVerticalLayout ? .leading : .firstBaseline
+        rateValueLabel.textAlignment =
+            usesVerticalLayout ? .left : .right
     }
 
     func updateRateValue(_ text: String) {
