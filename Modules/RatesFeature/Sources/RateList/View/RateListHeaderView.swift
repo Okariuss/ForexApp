@@ -16,11 +16,11 @@ final class RateListHeaderView: UIView {
     private let baseLabel: UILabel = {
         let label = UILabel()
         label.text = "Base:"
-        label.font =
-            RateListTypography.headerBaseCurrency
-        label.textColor =
-            RateListColor.headerBaseCurrency
+        label.font = RateListTypography.headerBaseCurrency
+        label.textColor = RateListColor.headerBaseCurrency
+        label.numberOfLines = 0
         label.adjustsFontForContentSizeCategory = true
+        label.isAccessibilityElement = false
         return label
     }()
 
@@ -29,7 +29,9 @@ final class RateListHeaderView: UIView {
         label.text = "Amount"
         label.font = RateListTypography.amountLabel
         label.textColor = RateListColor.amountLabel
+        label.numberOfLines = 0
         label.adjustsFontForContentSizeCategory = true
+        label.isAccessibilityElement = false
         return label
     }()
 
@@ -42,6 +44,19 @@ final class RateListHeaderView: UIView {
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         return label
+    }()
+
+    private let baseCurrencySpacerView: UIView = {
+        let view = UIView()
+        view.setContentHuggingPriority(
+            .defaultLow,
+            for: .horizontal
+        )
+        view.setContentCompressionResistancePriority(
+            .defaultLow,
+            for: .horizontal
+        )
+        return view
     }()
 
     private lazy var baseCurrencyButton: UIButton = {
@@ -66,6 +81,10 @@ final class RateListHeaderView: UIView {
 
         let button = UIButton(configuration: configuration)
         button.contentHorizontalAlignment = .leading
+        button.setContentHuggingPriority(
+            .required,
+            for: .horizontal
+        )
         button.accessibilityHint =
             "Opens the currency selection list."
         button.addTarget(
@@ -86,6 +105,7 @@ final class RateListHeaderView: UIView {
         textField.clearButtonMode = .whileEditing
         textField.adjustsFontForContentSizeCategory = true
         textField.accessibilityLabel = "Amount"
+        textField.accessibilityHint = "Enter the amount to convert."
         textField.addTarget(
             self,
             action: #selector(amountDidChange),
@@ -98,6 +118,7 @@ final class RateListHeaderView: UIView {
         let stackView = UIStackView(
             arrangedSubviews: [
                 baseLabel,
+                baseCurrencySpacerView,
                 baseCurrencyButton
             ]
         )
@@ -195,8 +216,8 @@ final class RateListHeaderView: UIView {
 
     func updateBaseCurrency(_ text: String) {
         baseCurrencyButton.configuration?.title = text
-        baseCurrencyButton.accessibilityLabel =
-            "Base currency, \(text)"
+        baseCurrencyButton.accessibilityLabel = "Base currency"
+        baseCurrencyButton.accessibilityValue = text
     }
 }
 
@@ -204,6 +225,17 @@ private extension RateListHeaderView {
     func setupView() {
         addSubview(stackView)
         translatesAutoresizingMaskIntoConstraints = false
+
+        updateLayoutForContentSizeCategory()
+
+        registerForTraitChanges(
+            [UITraitPreferredContentSizeCategory.self]
+        ) { (headerView: RateListHeaderView, _) in
+            UIView.performWithoutAnimation {
+                headerView.updateLayoutForContentSizeCategory()
+                headerView.superview?.layoutIfNeeded()
+            }
+        }
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(
@@ -219,6 +251,27 @@ private extension RateListHeaderView {
                 equalTo: bottomAnchor
             )
         ])
+    }
+
+    func updateLayoutForContentSizeCategory() {
+        let usesVerticalLayout =
+            traitCollection.preferredContentSizeCategory
+                .isAccessibilityCategory
+
+        baseCurrencySpacerView.isHidden = usesVerticalLayout
+
+        baseCurrencyStackView.axis =
+            usesVerticalLayout ? .vertical : .horizontal
+        baseCurrencyStackView.alignment =
+            usesVerticalLayout ? .leading : .firstBaseline
+
+        amountStackView.axis =
+            usesVerticalLayout ? .vertical : .horizontal
+        amountStackView.alignment =
+            usesVerticalLayout ? .fill : .center
+
+        amountTextField.textAlignment =
+            usesVerticalLayout ? .left : .right
     }
 
     @objc func amountDidChange() {
