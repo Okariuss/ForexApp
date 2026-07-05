@@ -90,9 +90,14 @@ final class CurrencyPickerCell: UITableViewCell {
         accessoryType =
             item.isSelected ? .checkmark : .none
         accessibilityLabel =
-            "\(item.codeText), \(item.nameText)"
+            RatesFeatureStrings.currencyAccessibilityLabel(
+                code: item.codeText,
+                name: item.nameText
+            )
         accessibilityHint =
-            "Sets \(item.codeText) as the base currency."
+            RatesFeatureStrings.currencyAccessibilityHint(
+                code: item.codeText
+            )
         accessibilityTraits =
             item.isSelected
                 ? [.button, .selected]

@@ -15,7 +15,7 @@ final class RateListHeaderView: UIView {
 
     private let baseLabel: UILabel = {
         let label = UILabel()
-        label.text = "Base:"
+        label.text = RatesFeatureStrings.baseLabel
         label.font = RateListTypography.headerBaseCurrency
         label.textColor = RateListColor.headerBaseCurrency
         label.numberOfLines = 0
@@ -26,7 +26,7 @@ final class RateListHeaderView: UIView {
 
     private let amountLabel: UILabel = {
         let label = UILabel()
-        label.text = "Amount"
+        label.text = RatesFeatureStrings.amountLabel
         label.font = RateListTypography.amountLabel
         label.textColor = RateListColor.amountLabel
         label.numberOfLines = 0
@@ -86,7 +86,7 @@ final class RateListHeaderView: UIView {
             for: .horizontal
         )
         button.accessibilityHint =
-            "Opens the currency selection list."
+            RatesFeatureStrings.baseCurrencyAccessibilityHint
         button.addTarget(
             self,
             action: #selector(baseCurrencyTapped),
@@ -104,8 +104,8 @@ final class RateListHeaderView: UIView {
         textField.borderStyle = .roundedRect
         textField.clearButtonMode = .whileEditing
         textField.adjustsFontForContentSizeCategory = true
-        textField.accessibilityLabel = "Amount"
-        textField.accessibilityHint = "Enter the amount to convert."
+        textField.accessibilityLabel = RatesFeatureStrings.amountAccessibilityLabel
+        textField.accessibilityHint = RatesFeatureStrings.amountAccessibilityHint
         textField.addTarget(
             self,
             action: #selector(amountDidChange),
@@ -180,7 +180,7 @@ final class RateListHeaderView: UIView {
         }
 
         updatedAtLabel.text =
-            "Updated: \(updatedAtText)"
+            RatesFeatureStrings.updatedAt(updatedAtText)
     }
 
     func currencyCodeFrame(
@@ -216,7 +216,7 @@ final class RateListHeaderView: UIView {
 
     func updateBaseCurrency(_ text: String) {
         baseCurrencyButton.configuration?.title = text
-        baseCurrencyButton.accessibilityLabel = "Base currency"
+        baseCurrencyButton.accessibilityLabel = RatesFeatureStrings.baseCurrencyAccessibilityLabel
         baseCurrencyButton.accessibilityValue = text
     }
 }

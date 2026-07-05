@@ -17,10 +17,17 @@ struct CurrencyPickerCellAccessibilityTests {
 
         #expect(sut.isAccessibilityElement)
         #expect(
-            sut.accessibilityLabel == "USD, US Dollar"
+            sut.accessibilityLabel ==
+                RatesFeatureStrings.currencyAccessibilityLabel(
+                    code: "USD",
+                    name: "US Dollar"
+                )
         )
         #expect(
-            sut.accessibilityHint == "Sets USD as the base currency."
+            sut.accessibilityHint ==
+                RatesFeatureStrings.currencyAccessibilityHint(
+                    code: "USD"
+                )
         )
         #expect(
             sut.accessibilityTraits.contains(.button)

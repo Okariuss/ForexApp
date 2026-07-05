@@ -30,7 +30,7 @@ struct CurrencyPickerCoordinatorTests {
         #expect(
             navigationController
                 .topViewController?
-                .title == "Select Currency"
+                .title == RatesFeatureStrings.currencyPickerTitle
         )
     }
 

@@ -63,6 +63,9 @@ private let ratesFeatureTarget: Target = .target(
     bundleId: "com.okarius.forexapp.ratesfeature",
     deploymentTargets: .iOS("26.0"),
     infoPlist: .default,
+    resources: [
+        "Modules/RatesFeature/Resources/**"
+    ],
     buildableFolders: [
         "Modules/RatesFeature/Sources"
     ],
@@ -336,6 +339,10 @@ let project = Project(
                 with: [
                     "CFBundleShortVersionString": "$(MARKETING_VERSION)",
                     "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
+                    "CFBundleLocalizations": [
+                        "en",
+                        "tr"
+                    ],
                     "ExchangeRateAPIBaseURL": "$(EXCHANGE_RATE_API_BASE_URL)",
                     "DefaultBaseCurrencyCode": "$(DEFAULT_BASE_CURRENCY_CODE)",
                     "UIApplicationSceneManifest": [
