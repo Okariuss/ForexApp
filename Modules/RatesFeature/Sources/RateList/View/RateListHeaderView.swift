@@ -13,6 +13,17 @@ final class RateListHeaderView: UIView {
     var onAmountChange: ((String) -> Void)?
     var onBaseCurrencySelection: (() -> Void)?
 
+    private let baseLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Base:"
+        label.font =
+            RateListTypography.headerBaseCurrency
+        label.textColor =
+            RateListColor.headerBaseCurrency
+        label.adjustsFontForContentSizeCategory = true
+        return label
+    }()
+
     private let amountLabel: UILabel = {
         let label = UILabel()
         label.text = "Amount"
@@ -83,6 +94,20 @@ final class RateListHeaderView: UIView {
         return textField
     }()
 
+    private lazy var baseCurrencyStackView: UIStackView = {
+        let stackView = UIStackView(
+            arrangedSubviews: [
+                baseLabel,
+                baseCurrencyButton
+            ]
+        )
+        stackView.axis = .horizontal
+        stackView.alignment = .firstBaseline
+        stackView.spacing =
+            RateListMetrics.headerContentSpacing
+        return stackView
+    }()
+
     private lazy var amountStackView: UIStackView = {
         let stackView = UIStackView(
             arrangedSubviews: [
@@ -100,7 +125,7 @@ final class RateListHeaderView: UIView {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(
             arrangedSubviews: [
-                baseCurrencyButton,
+                baseCurrencyStackView,
                 amountStackView,
                 updatedAtLabel
             ]
@@ -127,8 +152,7 @@ final class RateListHeaderView: UIView {
         amountText: String,
         updatedAtText: String
     ) {
-        baseCurrencyButton.configuration?.title =
-            "Base: \(baseCurrencyText)"
+        updateBaseCurrency(baseCurrencyText)
 
         if amountTextField.text != amountText {
             amountTextField.text = amountText
@@ -136,6 +160,43 @@ final class RateListHeaderView: UIView {
 
         updatedAtLabel.text =
             "Updated: \(updatedAtText)"
+    }
+
+    func currencyCodeFrame(
+        in containerView: UIView
+    ) -> CGRect {
+        layoutIfNeeded()
+
+        let transitionView =
+            baseCurrencyButton.titleLabel ??
+            baseCurrencyButton
+
+        return transitionView.convert(
+            transitionView.bounds,
+            to: containerView
+        )
+    }
+
+    func currencyCodeSnapshot() -> UIView? {
+        layoutIfNeeded()
+
+        let transitionView =
+            baseCurrencyButton.titleLabel ??
+            baseCurrencyButton
+
+        return transitionView.snapshotView(
+            afterScreenUpdates: false
+        )
+    }
+
+    func setCurrencyCodeAlpha(_ alpha: CGFloat) {
+        baseCurrencyButton.titleLabel?.alpha = alpha
+    }
+
+    func updateBaseCurrency(_ text: String) {
+        baseCurrencyButton.configuration?.title = text
+        baseCurrencyButton.accessibilityLabel =
+            "Base currency, \(text)"
     }
 }
 

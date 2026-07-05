@@ -11,7 +11,7 @@ import RatesDomain
 import UIKit
 
 @MainActor
-public final class RateListCoordinator: Coordinator {
+public final class RateListCoordinator: NSObject, Coordinator {
     private weak var navigationController: UINavigationController?
     private weak var mainViewController: RateListViewController?
 
@@ -20,6 +20,7 @@ public final class RateListCoordinator: Coordinator {
     private let repository: any RatesRepository
     private let baseCurrency: CurrencyCode
     private let onBaseCurrencyChange: (CurrencyCode) -> Void
+    private let currencyPickerAnimator = CurrencyPickerTransitionAnimator()
 
     public init(
         navigationController: UINavigationController,
@@ -31,6 +32,10 @@ public final class RateListCoordinator: Coordinator {
         self.repository = repository
         self.baseCurrency = baseCurrency
         self.onBaseCurrencyChange = onBaseCurrencyChange
+
+        super.init()
+
+        navigationController.delegate = self
     }
 
     public func start() {
@@ -108,5 +113,36 @@ extension RateListCoordinator: CurrencyPickerCoordinatorDelegate {
         coordinator.delegate = self
         currencyPickerCoordinator = coordinator
         coordinator.start()
+    }
+}
+
+extension RateListCoordinator: UINavigationControllerDelegate {
+    public func navigationController(
+        _: UINavigationController,
+        animationControllerFor operation: UINavigationController.Operation,
+        from fromVC: UIViewController,
+        to toVC: UIViewController
+    ) -> (any UIViewControllerAnimatedTransitioning)? {
+        let isCurrencyPickerPush =
+            operation == .push &&
+            fromVC is RateListViewController &&
+            toVC is CurrencyPickerViewController
+
+        let isCurrencyPickerPop =
+            operation == .pop &&
+            fromVC is CurrencyPickerViewController &&
+            toVC is RateListViewController
+
+        if isCurrencyPickerPush {
+            currencyPickerAnimator.isForward = true
+            return currencyPickerAnimator
+        }
+
+        if isCurrencyPickerPop {
+            currencyPickerAnimator.isForward = false
+            return currencyPickerAnimator
+        }
+
+        return nil
     }
 }

@@ -55,13 +55,14 @@ final class RateListCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        rateValueLabel.layer.removeAllAnimations()
         currencyCodeLabel.text = nil
         rateValueLabel.text = nil
     }
 
     func configure(with item: RateListItem) {
         currencyCodeLabel.text = item.currencyCodeText
-        rateValueLabel.text = item.rateValueText
+        updateRateValue(item.rateValueText)
     }
 }
 
@@ -99,5 +100,32 @@ private extension RateListCell {
                 equalTo: contentView.layoutMarginsGuide.bottomAnchor
             )
         ])
+    }
+
+    func updateRateValue(_ text: String) {
+        guard rateValueLabel.text != text else {
+            return
+        }
+
+        guard
+            rateValueLabel.text != nil,
+            !UIAccessibility.isReduceMotionEnabled
+        else {
+            rateValueLabel.text = text
+            return
+        }
+
+        UIView.transition(
+            with: rateValueLabel,
+            duration:
+            RateListAnimation.rateValueTransitionDuration,
+            options: [
+                .transitionCrossDissolve,
+                .beginFromCurrentState
+            ],
+            animations: {
+                self.rateValueLabel.text = text
+            }
+        )
     }
 }

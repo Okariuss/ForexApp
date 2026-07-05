@@ -90,6 +90,53 @@ struct RateListCoordinatorTests {
                 is CurrencyPickerViewController
         )
     }
+
+    @Test func pushToCurrencyPickerUsesForwardAnimator() throws {
+        let subject = try makeTransitionSubject()
+
+        let animator = subject.coordinator.navigationController(
+            subject.navigationController,
+            animationControllerFor: .push,
+            from: subject.rateListViewController,
+            to: subject.currencyPickerViewController
+        )
+
+        let transitionAnimator = try #require(
+            animator as? CurrencyPickerTransitionAnimator
+        )
+
+        #expect(transitionAnimator.isForward)
+    }
+
+    @Test func popFromCurrencyPickerUsesReverseAnimator() throws {
+        let subject = try makeTransitionSubject()
+
+        let animator = subject.coordinator.navigationController(
+            subject.navigationController,
+            animationControllerFor: .pop,
+            from: subject.currencyPickerViewController,
+            to: subject.rateListViewController
+        )
+
+        let transitionAnimator = try #require(
+            animator as? CurrencyPickerTransitionAnimator
+        )
+
+        #expect(!transitionAnimator.isForward)
+    }
+
+    @Test func unrelatedTransitionUsesDefaultAnimator() throws {
+        let subject = try makeTransitionSubject()
+
+        let animator = subject.coordinator.navigationController(
+            subject.navigationController,
+            animationControllerFor: .push,
+            from: UIViewController(),
+            to: UIViewController()
+        )
+
+        #expect(animator == nil)
+    }
 }
 
 private struct CoordinatorRepositoryStub: RatesRepository {
@@ -97,5 +144,53 @@ private struct CoordinatorRepositoryStub: RatesRepository {
         baseCurrency _: CurrencyCode
     ) async throws -> [ExchangeRate] {
         []
+    }
+}
+
+private extension RateListCoordinatorTests {
+    struct TransitionSubject {
+        let coordinator: RateListCoordinator
+        let navigationController: UINavigationController
+        let rateListViewController: RateListViewController
+        let currencyPickerViewController: CurrencyPickerViewController
+    }
+
+    func makeTransitionSubject() throws -> TransitionSubject {
+        let navigationController = UINavigationController()
+        let repository = CoordinatorRepositoryStub()
+        let baseCurrency = try CurrencyCode("USD")
+
+        let coordinator = RateListCoordinator(
+            navigationController: navigationController,
+            repository: repository,
+            baseCurrency: baseCurrency
+        )
+        let rateListViewController =
+            RateListBuilder.make(
+                coordinator: coordinator,
+                repository: repository,
+                baseCurrency: baseCurrency
+            )
+
+        let pickerCoordinator =
+            CurrencyPickerCoordinator(
+                navigationController:
+                navigationController,
+                currencies: [baseCurrency],
+                selectedCurrency: baseCurrency
+            )
+        let currencyPickerViewController =
+            CurrencyPickerBuilder.make(
+                coordinator: pickerCoordinator,
+                currencies: [baseCurrency],
+                selectedCurrency: baseCurrency
+            )
+
+        return TransitionSubject(
+            coordinator: coordinator,
+            navigationController: navigationController,
+            rateListViewController: rateListViewController,
+            currencyPickerViewController: currencyPickerViewController
+        )
     }
 }
