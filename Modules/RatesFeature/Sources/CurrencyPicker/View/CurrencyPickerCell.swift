@@ -166,25 +166,7 @@ private extension CurrencyPickerCell {
         }
 
         contentView.addSubview(stackView)
-
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(
-                equalTo:
-                contentView.layoutMarginsGuide.topAnchor
-            ),
-            stackView.leadingAnchor.constraint(
-                equalTo:
-                contentView.layoutMarginsGuide.leadingAnchor
-            ),
-            stackView.trailingAnchor.constraint(
-                equalTo:
-                contentView.layoutMarginsGuide.trailingAnchor
-            ),
-            stackView.bottomAnchor.constraint(
-                equalTo:
-                contentView.layoutMarginsGuide.bottomAnchor
-            )
-        ])
+        setupLayout()
     }
 
     func updateLayoutForContentSizeCategory() {
@@ -198,5 +180,29 @@ private extension CurrencyPickerCell {
             usesVerticalLayout ? .leading : .firstBaseline
         currencyNameLabel.textAlignment =
             usesVerticalLayout ? .left : .right
+    }
+
+    func setupLayout() {
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(
+                greaterThanOrEqualTo:
+                contentView.layoutMarginsGuide.topAnchor
+            ),
+            stackView.leadingAnchor.constraint(
+                equalTo:
+                contentView.layoutMarginsGuide.leadingAnchor
+            ),
+            stackView.trailingAnchor.constraint(
+                equalTo:
+                contentView.layoutMarginsGuide.trailingAnchor
+            ),
+            stackView.bottomAnchor.constraint(
+                lessThanOrEqualTo:
+                contentView.layoutMarginsGuide.bottomAnchor
+            ),
+            stackView.centerYAnchor.constraint(
+                equalTo: contentView.centerYAnchor
+            )
+        ])
     }
 }
