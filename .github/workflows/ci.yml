@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: macos-26
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install pinned tools
+        uses: jdx/mise-action@v4
+        with:
+          cache: true
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_26.5.app
+          xcodebuild -version
+          xcrun simctl list devices available
+
+      - name: Verify tool versions
+        run: |
+          tuist version
+          swiftformat --version
+          swiftlint version
+
+      - name: Install project dependencies
+        run: tuist install
+
+      - name: Check formatting
+        run: make format-check
+
+      - name: Run lint
+        run: make lint
+
+      - name: Run tests
+        run: make test-all
+
+      - name: Build application
+        run: make build SCHEME=ForexApp
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/*.xcresult
+          if-no-files-found: ignore
+          retention-days: 7
