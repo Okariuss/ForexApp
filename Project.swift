@@ -102,6 +102,9 @@ private let ratesFeatureTestTarget: Target = .target(
         ),
         .target(
             name: "AppMacros"
+        ),
+        .external(
+            name: "SnapshotTesting"
         )
     ],
     settings: sharedSettings

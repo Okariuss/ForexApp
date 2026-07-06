@@ -101,21 +101,7 @@ private extension RateListCell {
         rateStackView.addArrangedSubview(currencyCodeLabel)
         rateStackView.addArrangedSubview(rateValueLabel)
         contentView.addSubview(rateStackView)
-
-        NSLayoutConstraint.activate([
-            rateStackView.topAnchor.constraint(
-                equalTo: contentView.layoutMarginsGuide.topAnchor
-            ),
-            rateStackView.leadingAnchor.constraint(
-                equalTo: contentView.layoutMarginsGuide.leadingAnchor
-            ),
-            rateStackView.trailingAnchor.constraint(
-                equalTo: contentView.layoutMarginsGuide.trailingAnchor
-            ),
-            rateStackView.bottomAnchor.constraint(
-                equalTo: contentView.layoutMarginsGuide.bottomAnchor
-            )
-        ])
+        setupLayout()
     }
 
     func updateLayoutForContentSizeCategory() {
@@ -129,6 +115,30 @@ private extension RateListCell {
             usesVerticalLayout ? .leading : .firstBaseline
         rateValueLabel.textAlignment =
             usesVerticalLayout ? .left : .right
+    }
+
+    func setupLayout() {
+        NSLayoutConstraint.activate([
+            rateStackView.topAnchor.constraint(
+                greaterThanOrEqualTo:
+                contentView.layoutMarginsGuide.topAnchor
+            ),
+            rateStackView.leadingAnchor.constraint(
+                equalTo:
+                contentView.layoutMarginsGuide.leadingAnchor
+            ),
+            rateStackView.trailingAnchor.constraint(
+                equalTo:
+                contentView.layoutMarginsGuide.trailingAnchor
+            ),
+            rateStackView.bottomAnchor.constraint(
+                lessThanOrEqualTo:
+                contentView.layoutMarginsGuide.bottomAnchor
+            ),
+            rateStackView.centerYAnchor.constraint(
+                equalTo: contentView.centerYAnchor
+            )
+        ])
     }
 
     func updateRateValue(_ text: String) {
