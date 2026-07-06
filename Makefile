@@ -8,29 +8,34 @@ TUIST_VERSION := 4.118.1
 TEST_LANGUAGE ?= en
 TEST_REGION ?= US
 
+TUIST := mise exec -- tuist
+SWIFTFORMAT := mise exec -- swiftformat
+SWIFTLINT := mise exec -- swiftlint
+
 TEST_SCHEMES := AppMacros DesignSystem NetworkingCore PresentationCore RatesData RatesDomain RatesFeature ForexApp
 
 .PHONY: setup verify-tuist generate format format-check lint build test test-all check
 
-setup: verify-tuist
+setup:
 	brew bundle
-	tuist install
+	mise install
+	$(TUIST) install
 
 verify-tuist:
-	@test "$$(tuist version)" = "$(TUIST_VERSION)" || \
+	@test "$$($(TUIST) version)" = "$(TUIST_VERSION)" || \
 		(echo "Expected Tuist $(TUIST_VERSION)." && exit 1)
 
 generate:
-	tuist generate --no-open
+	$(TUIST) generate --no-open
 
 format:
-	swiftformat .
+	$(SWIFTFORMAT) .
 
 format-check:
-	swiftformat . --lint
+	$(SWIFTFORMAT) . --lint
 
 lint:
-	swiftlint lint
+	$(SWIFTLINT) lint
 
 build: generate
 	xcodebuild -quiet \
