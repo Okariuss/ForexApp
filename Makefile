@@ -2,7 +2,7 @@ SHELL := /bin/zsh
 
 SCHEME ?= ForexApp
 CONFIGURATION ?= Debug
-DESTINATION ?= platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5
+DESTINATION ?= platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5,arch=arm64
 TUIST_VERSION := 4.118.1
 
 TEST_LANGUAGE ?= en
