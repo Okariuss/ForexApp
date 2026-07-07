@@ -107,7 +107,7 @@ final class RateListViewController: UIViewController {
     required init?(coder _: NSCoder) {
         nil
     }
-    
+
     deinit {
         loadTask?.cancel()
     }
