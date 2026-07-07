@@ -17,10 +17,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
-    name: Verify
+  quality:
+    name: Quality
     runs-on: macos-26
-    timeout-minutes: 60
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -35,7 +35,6 @@ jobs:
         run: |
           sudo xcode-select --switch /Applications/Xcode_26.5.app
           xcodebuild -version
-          xcrun simctl list devices available
 
       - name: Verify tool versions
         run: |
@@ -52,17 +51,75 @@ jobs:
       - name: Run lint
         run: make lint
 
-      - name: Run tests
-        run: make test-all
+  tests:
+    name: Tests (${{ matrix.scheme }})
+    runs-on: macos-26
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        scheme:
+          - AppMacros
+          - DesignSystem
+          - NetworkingCore
+          - PresentationCore
+          - RatesData
+          - RatesDomain
+          - RatesFeature
+          - ForexApp
 
-      - name: Build application
-        run: make build SCHEME=ForexApp
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install pinned tools
+        uses: jdx/mise-action@v4
+        with:
+          cache: true
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_26.5.app
+          xcodebuild -version
+
+      - name: Install project dependencies
+        run: tuist install
+
+      - name: Run tests
+        run: make test SCHEME=${{ matrix.scheme }}
 
       - name: Upload test results
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: test-results-${{ matrix.scheme }}
           path: ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/*.xcresult
           if-no-files-found: ignore
-          retention-days: 7
+
+  build:
+    name: Build
+    runs-on: macos-26
+    timeout-minutes: 30
+    needs:
+      - quality
+      - tests
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install pinned tools
+        uses: jdx/mise-action@v4
+        with:
+          cache: true
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_26.5.app
+          xcodebuild -version
+
+      - name: Install project dependencies
+        run: tuist install
+
+      - name: Build application
+        run: make build SCHEME=ForexApp
