@@ -7,12 +7,11 @@ TUIST_VERSION := 4.118.1
 
 TEST_LANGUAGE ?= en
 TEST_REGION ?= US
+TEST_ALL_SCHEME ?= ForexApp-Workspace
 
 TUIST := mise exec -- tuist
 SWIFTFORMAT := mise exec -- swiftformat
 SWIFTLINT := mise exec -- swiftlint
-
-TEST_SCHEMES := AppMacros DesignSystem NetworkingCore PresentationCore RatesData RatesDomain RatesFeature ForexApp
 
 .PHONY: setup verify-tuist generate format format-check lint build test test-all check
 
@@ -56,16 +55,13 @@ test: generate
 		test
 		
 test-all: generate
-	@for scheme in $(TEST_SCHEMES); do \
-		echo "Testing $$scheme..."; \
-		xcodebuild -quiet \
-			-workspace ForexApp.xcworkspace \
-			-scheme "$$scheme" \
-			-configuration $(CONFIGURATION) \
-			-destination '$(DESTINATION)' \
-			-testLanguage $(TEST_LANGUAGE) \
-			-testRegion $(TEST_REGION) \
-			test || exit $$?; \
-	done
+	xcodebuild -quiet \
+		-workspace ForexApp.xcworkspace \
+		-scheme $(TEST_ALL_SCHEME) \
+		-configuration $(CONFIGURATION) \
+		-destination '$(DESTINATION)' \
+		-testLanguage $(TEST_LANGUAGE) \
+		-testRegion $(TEST_REGION) \
+		test
 
 check: format-check lint test-all
