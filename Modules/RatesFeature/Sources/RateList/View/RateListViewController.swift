@@ -108,6 +108,10 @@ final class RateListViewController: UIViewController {
         nil
     }
 
+    deinit {
+        loadTask?.cancel()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
