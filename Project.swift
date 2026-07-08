@@ -342,6 +342,7 @@ let project = Project(
                 with: [
                     "CFBundleShortVersionString": "$(MARKETING_VERSION)",
                     "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
+                    "CFBundleDisplayName": "$(APP_DISPLAY_NAME)",
                     "CFBundleLocalizations": [
                         "en",
                         "tr"
@@ -360,8 +361,14 @@ let project = Project(
                         ]
                     ],
                     "UILaunchScreen": [
-                        "UIColorName": "",
+                        "UIColorName": "LaunchBackground",
                         "UIImageName": ""
+                    ],
+                    "UISupportedInterfaceOrientations": [
+                        "UIInterfaceOrientationPortrait"
+                    ],
+                    "UISupportedInterfaceOrientations~ipad": [
+                        "UIInterfaceOrientationPortrait"
                     ]
                 ]
             ),
