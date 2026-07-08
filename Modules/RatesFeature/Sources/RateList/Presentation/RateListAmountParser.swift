@@ -25,9 +25,17 @@ final class RateListAmountParser: RateListAmountParsing {
     }
 
     func parse(_ text: String) -> Decimal? {
-        guard !text.isEmpty,
-              let number = numberFormatter.number(from: text)
-        else {
+        let trimmedText = text.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+
+        guard !trimmedText.isEmpty else {
+            return .zero
+        }
+
+        guard let number = numberFormatter.number(
+            from: trimmedText
+        ) else {
             return nil
         }
 

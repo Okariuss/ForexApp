@@ -162,6 +162,7 @@ private extension RateListViewController {
         setupRefreshToCollectionView()
         setupContentLayout()
         setupAttributionLayout()
+        setupKeyboardDismissGesture()
     }
 
     func setupRefreshToCollectionView() {
@@ -351,6 +352,16 @@ private extension RateListViewController {
         )
     }
 
+    func setupKeyboardDismissGesture() {
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard)
+        )
+        tapGesture.cancelsTouchesInView = false
+
+        view.addGestureRecognizer(tapGesture)
+    }
+
     @objc func attributionTapped() {
         let url = #URL("https://www.exchangerate-api.com")
 
@@ -373,5 +384,9 @@ private extension RateListViewController {
 
             await viewModel.refresh()
         }
+    }
+
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
