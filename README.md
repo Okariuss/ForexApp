@@ -256,6 +256,12 @@ xcodebuild \
 
 This can be caused by stale DerivedData or plugin-process state. If cleaning the scheme does not resolve it, restart Xcode and rebuild the workspace.
 
+## Privacy
+
+ForexApp does not collect personal data, does not track users, and does not use analytics or advertising SDKs.
+
+See [Privacy Policy](docs/privacy-policy.md).
+
 ## Acknowledgements
 
 ForexApp is an independent portfolio project built by applying the architecture, testing, accessibility, and engineering practices I learned during the iCommunity Advanced iOS Bootcamp.
