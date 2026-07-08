@@ -38,6 +38,14 @@ struct RateListAmountParserTests {
         )
 
         #expect(subject.parse("invalid") == nil)
-        #expect(subject.parse("") == nil)
+    }
+
+    @Test func emptyTextReturnsZero() {
+        let subject = RateListAmountParser(
+            locale: Locale(identifier: "en_US")
+        )
+
+        #expect(subject.parse("") == .zero)
+        #expect(subject.parse("   ") == .zero)
     }
 }
