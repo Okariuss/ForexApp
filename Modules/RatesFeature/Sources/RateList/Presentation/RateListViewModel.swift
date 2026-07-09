@@ -6,6 +6,7 @@
 //  Copyright © 2026 Okarius. All rights reserved.
 //
 
+import AppMacros
 import Foundation
 import RatesDomain
 
@@ -17,7 +18,7 @@ final class RateListViewModel {
 
     private(set) var baseCurrency: CurrencyCode
     private var rates: [ExchangeRate] = []
-    private var amount = Decimal(1)
+    private var amount = #Decimal("1")
     private var amountText = "1"
 
     var availableCurrencies: [CurrencyCode] {
