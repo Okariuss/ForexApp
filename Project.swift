@@ -334,7 +334,7 @@ let project = Project(
         ratesDomainTestTarget,
         .target(
             name: "ForexApp",
-            destinations: .iOS,
+            destinations: [.iPhone],
             product: .app,
             bundleId: "com.okarius.forexapp",
             deploymentTargets: .iOS("26.0"),
@@ -366,9 +366,6 @@ let project = Project(
                     ],
                     "UISupportedInterfaceOrientations": [
                         "UIInterfaceOrientationPortrait"
-                    ],
-                    "UISupportedInterfaceOrientations~ipad": [
-                        "UIInterfaceOrientationPortrait"
                     ]
                 ]
             ),
@@ -397,7 +394,7 @@ let project = Project(
         ),
         .target(
             name: "ForexAppTests",
-            destinations: .iOS,
+            destinations: [.iPhone],
             product: .unitTests,
             bundleId: "com.okarius.forexapp.tests",
             deploymentTargets: .iOS("26.0"),
