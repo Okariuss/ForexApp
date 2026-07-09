@@ -13,7 +13,7 @@ TUIST := mise exec -- tuist
 SWIFTFORMAT := mise exec -- swiftformat
 SWIFTLINT := mise exec -- swiftlint
 
-.PHONY: setup verify-tuist generate format format-check lint build test test-all check
+.PHONY: setup verify-tuist generate patch-tuist-macro-shell format format-check lint build test test-all check
 
 setup:
 	brew bundle
@@ -26,6 +26,10 @@ verify-tuist:
 
 generate:
 	$(TUIST) generate --no-open
+	$(MAKE) patch-tuist-macro-shell
+
+patch-tuist-macro-shell:
+	./scripts/patch-tuist-macro-shell.sh
 
 format:
 	$(SWIFTFORMAT) .
