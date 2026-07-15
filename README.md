@@ -2,10 +2,10 @@
   <img
     src="ForexApp/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
     width="128"
-    alt="ForexApp icon"
+    alt="Ratewise icon"
   />
 
-  # ForexApp
+  # Ratewise
 
   A modular, accessible currency rate application built with UIKit, Swift 6, and Tuist.
 
@@ -14,7 +14,7 @@
 
 ## Overview
 
-ForexApp displays current exchange rates for a selected base currency and recalculates them for locale-aware amount input.
+Ratewise displays current exchange rates for a selected base currency and recalculates them for locale-aware amount input.
 
 The project focuses on modular architecture, strict concurrency, offline resilience, accessibility, localization, automated testing, and reproducible development tooling.
 
@@ -52,11 +52,11 @@ The project focuses on modular architecture, strict concurrency, offline resilie
 
 ## Architecture
 
-ForexApp uses a modular MVVM-C architecture with dependency injection.
+Ratewise uses a modular MVVM-C architecture with dependency injection.
 
 ```mermaid
 flowchart TD
-    App["ForexApp<br/>Composition Root"]
+    App["Ratewise<br/>Composition Root"]
 
     App --> Feature["RatesFeature<br/>UI · MVVM-C"]
     App --> Data["RatesData<br/>Repositories · DTO Mapping"]
@@ -72,7 +72,7 @@ flowchart TD
     Macros -.-> Plugin["AppMacrosPlugin"]
 ```
 
-`ForexApp` is the composition root. It constructs the concrete data layer and injects domain abstractions into feature modules. Dashed arrows represent compile-time tooling.
+`Ratewise` is the composition root. It constructs the concrete data layer and injects domain abstractions into feature modules. Dashed arrows represent compile-time tooling.
 
 ## Modules
 
@@ -204,7 +204,7 @@ GitHub Actions verifies every pull request and every push to `main` by running:
 
 ## Accessibility
 
-ForexApp supports:
+Ratewise supports:
 
 - Dynamic Type
 - Accessibility text categories
@@ -258,12 +258,12 @@ This can be caused by stale DerivedData or plugin-process state. If cleaning the
 
 ## Privacy
 
-ForexApp does not collect personal data, does not track users, and does not use analytics or advertising SDKs.
+Ratewise does not collect personal data, does not track users, and does not use analytics or advertising SDKs.
 
 See [Privacy Policy](docs/privacy-policy.md).
 
 ## Acknowledgements
 
-ForexApp is an independent portfolio project built by applying the architecture, testing, accessibility, and engineering practices I learned during the iCommunity Advanced iOS Bootcamp.
+Ratewise is an independent portfolio project built by applying the architecture, testing, accessibility, and engineering practices I learned during the iCommunity Advanced iOS Bootcamp.
 
 Special thanks to my instructor, [Seyfeddin Başsaraç](https://seyfedd.in), for his guidance throughout the program.
